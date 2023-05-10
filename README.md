@@ -134,6 +134,10 @@ pnpm install
 根目录下运行以下命令
 ```shell
 pnpm bootstrap
+
+npm install --save-dev @types/uuid /安装uuid
+
+pnpm install mysql
 ```
 
 ## 测试环境运行

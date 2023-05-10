@@ -1,13 +1,16 @@
 import express from 'express'
+import { v4 as uuidv4 } from 'uuid'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
 import { auth } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
+import { queryDemo } from './db/dbsql'
 
 const app = express()// 创建 Express 应用程序实例。
 const router = express.Router()// 创建路由器实例。
+const uuid: string = uuidv4() // uuid
 
 app.use(express.static('public'))// 使用静态文件托管中间件来服务 public 目录下的静态资源。
 app.use(express.json())// 使用 bodyParser 中间件来解析请求体。
@@ -57,13 +60,13 @@ router.post('/config', auth, async (req, res) => {
     res.send(error)
   }
 })
-
 // 定义 '/session' 路由，处理异步请求，并返回一个包含当前机器人模型和认证信息的 JSON 响应。
-router.post('/session', async (req, res) => {
+router.post('/session', async (req, res, result) => {
   try {
     const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
     const hasAuth = isNotEmptyString(AUTH_SECRET_KEY)
-    res.send({ status: 'Success', message: '', data: { auth: hasAuth, model: currentModel() } })
+    const demo = await queryDemo()
+    res.send({ status: 'Success', message: demo, data: { auth: hasAuth, model: currentModel() } })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

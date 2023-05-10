@@ -17,12 +17,16 @@
     "paths": {
       "@/*": ["./src/*"]
     },
+    "typeRoots": [ // Robin 为了引入uuid
+      "./typings",
+      "./node_modules/@types"
+    ],
     "types": ["vite/client", "node", "naive-ui/volar"]
   },
   "exclude": ["node_modules", "dist", "service"]
 }
 
-/*这段代码是 TypeScript 的配置文件 tsconfig.json，用于告诉编译器如何编译 TypeScript 代码。该配置主要包含以下内容：
+/* 这段代码是 TypeScript 的配置文件 tsconfig.json，用于告诉编译器如何编译 TypeScript 代码。该配置主要包含以下内容：
 "compilerOptions"：编译选项。
 "baseUrl": "."：设置模块解析的根路径，默认为当前目录。
 "module": "ESNext"：指定输出模块类型，默认为 CommonJS。
@@ -38,6 +42,6 @@
 "strictNullChecks": true：启用严格的空值检查。
 "forceConsistentCasingInFileNames": true：在名称不区分大小写的文件系统上，强制对文件名进行规范化处理。
 "skipLibCheck": true：跳过内置库的类型检查。
-"paths": {"@*//*": ["./src*//*"]}：配置路径映射，将 @/ 替换为 ./src/，方便导入模块。
+"paths": {"@ *//* ": ["./src *//* "]}：配置路径映射，将 @/ 替换为 ./src/，方便导入模块。
 "types": ["vite/client", "node", "naive-ui/volar"]：指定所需的类型声明文件。
-"exclude"：排除指定目录和文件的编译，避免重复编译和冲突等问题。该示例代码排除了 node_modules、dist 和 service 目录。*/
+"exclude"：排除指定目录和文件的编译，避免重复编译和冲突等问题。该示例代码排除了 node_modules、dist 和 service 目录。 */
