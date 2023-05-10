@@ -21,3 +21,23 @@
   },
   "exclude": ["node_modules", "dist", "service"]
 }
+
+/*这段代码是 TypeScript 的配置文件 tsconfig.json，用于告诉编译器如何编译 TypeScript 代码。该配置主要包含以下内容：
+"compilerOptions"：编译选项。
+"baseUrl": "."：设置模块解析的根路径，默认为当前目录。
+"module": "ESNext"：指定输出模块类型，默认为 CommonJS。
+"target": "ESNext"：指定编译后的代码版本，默认为 ES3。
+"lib": ["DOM", "ESNext"]：指定支持的库文件，默认为 Core、DOM 和 AsyncIterable。
+"strict": true：打开所有严格类型检查选项，包括基本类型检查和对象成员检查等。
+"esModuleInterop": true：允许使用 CommonJS 模块和 ES6 模块之间导入和导出语法。
+"allowSyntheticDefaultImports": true：允许从没有默认导出的模块中默认导入。
+"jsx": "preserve"：保留 JSX 语法。
+"moduleResolution": "node"：指定模块解析策略，默认为 Node.js 的解析规则。
+"resolveJsonModule": true：允许导入 JSON 格式的模块。
+"noUnusedLocals": true：禁止未使用的局部变量和函数参数。
+"strictNullChecks": true：启用严格的空值检查。
+"forceConsistentCasingInFileNames": true：在名称不区分大小写的文件系统上，强制对文件名进行规范化处理。
+"skipLibCheck": true：跳过内置库的类型检查。
+"paths": {"@*//*": ["./src*//*"]}：配置路径映射，将 @/ 替换为 ./src/，方便导入模块。
+"types": ["vite/client", "node", "naive-ui/volar"]：指定所需的类型声明文件。
+"exclude"：排除指定目录和文件的编译，避免重复编译和冲突等问题。该示例代码排除了 node_modules、dist 和 service 目录。*/
