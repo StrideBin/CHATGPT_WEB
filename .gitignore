@@ -30,3 +30,7 @@ coverage
 
 # Environment variables files
 /service/.env
+/service/src/db/db.ts
+package.json
+package-lock.json
+pnpm-lock.yaml

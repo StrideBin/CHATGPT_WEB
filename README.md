@@ -138,6 +138,11 @@ pnpm bootstrap
 npm install --save-dev @types/uuid /安装uuid
 
 pnpm install mysql
+
+npm install cookie-parser --save
+
+pnpm install --save-dev @types/qrcode
+
 ```
 
 ## 测试环境运行

@@ -32,7 +32,18 @@ async function fetchConfig() {
     loading.value = false
   }
 }
-
+// const canvas = document.createElement('canvas')
+// const ctx = canvas.getContext('2d')
+//
+// QRCode.toCanvas(canvas, 'https://www.example.com', (error: any) => {
+//   if (error) {
+//     console.error(error)
+//   }
+//   else {
+//     const base64 = canvas.toDataURL('image/png')
+//     console.log(base64)
+//   }
+// })
 onMounted(() => {
   fetchConfig()
 })

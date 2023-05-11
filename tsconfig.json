@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "module": "ESNext",
     "target": "ESNext",
-    "lib": ["DOM", "ESNext"],
+    "lib": ["es6", "DOM", "ESNext"],
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -21,7 +21,7 @@
       "./typings",
       "./node_modules/@types"
     ],
-    "types": ["vite/client", "node", "naive-ui/volar"]
+    "types": ["vite/client", "node", "naive-ui/volar", "cookie-parser"]
   },
   "exclude": ["node_modules", "dist", "service"]
 }
