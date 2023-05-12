@@ -9,12 +9,12 @@ export function queryUUid(uuid) {
     })
   })
 }
-export function insertUUid(uuid) {
+export function insertUUid(uuid, ip) {
   return new Promise((resolve, reject) => {
     const currentTime = new Date()
     currentTime.setMinutes(currentTime.getMinutes() + 10)
-    db.query('INSERT INTO uuid(uuid, valid_until) VALUES (?, ?)',
-      [uuid, currentTime], (err, result) => {
+    db.query('INSERT INTO uuid(uuid,ip,valid_until) VALUES (?, ?, ?)',
+      [uuid, ip, currentTime], (err, result) => {
         if (err)
           return reject(err)
         resolve(result)

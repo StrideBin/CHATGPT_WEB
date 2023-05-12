@@ -2,11 +2,13 @@ import * as console from 'console'
 import express from 'express'
 import { v4 as uuidv4 } from 'uuid'
 import cookieParser from 'cookie-parser'
-import { chatConfig, currentModel } from './chatgpt'
+import type { ChatMessage } from 'chatgpt'
+import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
 import { auth } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
 import { insertUUid, queryUUid } from './db/dbsql'
+import type { RequestProps } from './types'
 
 const app = express()// 创建 Express 应用程序实例。
 const router = express.Router()// 创建路由器实例。
@@ -53,7 +55,7 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
         second: '2-digit',
       })
       const chineseDateString = formatter.format(validUntil)
-      const chatMessage = await createChatMessagePromise(`您的账号已经过期，请充值。账号唯一ID:${uuid},到期时间:${chineseDateString}`)
+      const chatMessage = await createChatMessagePromise(`您的账号已经过期。您的秘钥:${uuid},到期时间:${chineseDateString}。以下两种方式可以继续免费使用：1.加入Q群118078759联系群主。2.打开头像旁边的设置，在公告处扫码捐赠任意金额。注：如需要多平台（或浏览器）登录，请在设置中输入有效的秘钥，即可使用。`)
       // 比较 valid_until 和当前时间是否相等
       if (validUntilUnixTime < currentTimeUnixTime) {
         console.log('222')
@@ -68,27 +70,27 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
       console.error(err)
     })
 
-  // try {
-  //   const { prompt, options = {}, systemMessage, temperature, top_p } = req.body as RequestProps
-  //   let firstChunk = true
-  //   await chatReplyProcess({
-  //     message: prompt,
-  //     lastContext: options,
-  //     process: (chat: ChatMessage) => {
-  //       res.write(firstChunk ? JSON.stringify(chat) : `\n${JSON.stringify(chat)}`)
-  //       firstChunk = false
-  //     },
-  //     systemMessage,
-  //     temperature,
-  //     top_p,
-  //   })
-  // }
-  // catch (error) {
-  //   res.write(JSON.stringify(error))
-  // }
-  // finally {
-  //   res.end()
-  // }
+  try {
+    const { prompt, options = {}, systemMessage, temperature, top_p } = req.body as RequestProps
+    let firstChunk = true
+    await chatReplyProcess({
+      message: prompt,
+      lastContext: options,
+      process: (chat: ChatMessage) => {
+        res.write(firstChunk ? JSON.stringify(chat) : `\n${JSON.stringify(chat)}`)
+        firstChunk = false
+      },
+      systemMessage,
+      temperature,
+      top_p,
+    })
+  }
+  catch (error) {
+    res.write(JSON.stringify(error))
+  }
+  finally {
+    res.end()
+  }
 })
 
 // 定义 '/config' 路由，使用 auth 中间件验证身份，并使用 async/await 处理异步请求，并返回 Promise 的 JSON 数据类型。
@@ -109,7 +111,8 @@ router.post('/session', async (req, res) => {
     if (!req.cookies?.uuid) { // 不存在uuid则新增
       const uuid: string = uuidv4() // uuid
       res.cookie('uuid', uuid)
-      await insertUUid(uuid)
+      const ip = req.connection.remoteAddress
+      await insertUUid(uuid, ip)
     }
     res.send({ status: 'Success', message: '', data: { auth: hasAuth, model: currentModel() } })
   }

@@ -26,6 +26,8 @@ const name = ref(userInfo.value.name ?? '')
 
 const description = ref(userInfo.value.description ?? '')
 
+const uuid = ref(userInfo.value.uuid ?? '')
+
 const language = computed({
   get() {
     return appStore.language
@@ -64,6 +66,15 @@ const languageOptions: { label: string; key: Language; value: Language }[] = [
 function updateUserInfo(options: Partial<UserInfo>) {
   userStore.updateUserInfo(options)
   ms.success(t('common.success'))
+}
+
+function updateCookie(options: Partial<UserInfo>) {
+  userStore.updateUserInfo(options)
+  setCookie('uuid', options.uuid ?? '') // 如果 options.uuid 为 undefined，将其转换为空字符串
+  ms.success(t('common.success'))
+}
+function setCookie(name: string, value: string) {
+  document.cookie = `${name}=${value};path=/`
 }
 
 function handleReset() {
@@ -140,6 +151,15 @@ function handleImportButtonClick(): void {
           <NInput v-model:value="name" placeholder="" />
         </div>
         <NButton size="tiny" text type="primary" @click="updateUserInfo({ name })">
+          {{ $t('common.save') }}
+        </NButton>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">秘钥</span>
+        <div class="w-[200px]">
+          <NInput v-model:value="uuid" placeholder="" />
+        </div>
+        <NButton size="tiny" text type="primary" @click="updateCookie({ uuid })">
           {{ $t('common.save') }}
         </NButton>
       </div>
