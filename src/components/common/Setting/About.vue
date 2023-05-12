@@ -1,7 +1,7 @@
 <script setup lang='ts'>
-import { computed, onMounted, ref } from 'vue'
+// import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { fetchChatConfig } from '@/api'
-import { useAuthStore } from '@/store'
 import imageSrc from '@/assets/2.png'
 
 interface ConfigState {
@@ -13,13 +13,13 @@ interface ConfigState {
   usage?: string
 }
 
-const authStore = useAuthStore()
+// const authStore = useAuthStore()
 
 const loading = ref(false)
 
 const config = ref<ConfigState>()
 
-const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
+// const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
 
 async function fetchConfig() {
   try {
