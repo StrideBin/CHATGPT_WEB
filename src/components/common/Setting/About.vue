@@ -2,7 +2,7 @@
 // import { computed, onMounted, ref } from 'vue'
 import { onMounted, ref } from 'vue'
 import { fetchChatConfig } from '@/api'
-import imageSrc from '@/assets/2.png'
+import imageSrc from '@/assets/2.jpeg'
 
 interface ConfigState {
   timeoutMs?: number
