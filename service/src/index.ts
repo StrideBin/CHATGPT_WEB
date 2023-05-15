@@ -1,12 +1,13 @@
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import type { ChatMessage } from 'chatgpt'
+import { v4 as uuidv4 } from 'uuid'
 import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
 import { auth } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
 import type { RequestProps } from './types'
-
+import { insertUUid } from './db/dbsql'
 const app = express()// 创建 Express 应用程序实例。
 const router = express.Router()// 创建路由器实例。
 app.use(express.static('public'))// 使用静态文件托管中间件来服务 public 目录下的静态资源。
@@ -105,12 +106,12 @@ router.post('/session', async (req, res) => {
   try {
     const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
     const hasAuth = isNotEmptyString(AUTH_SECRET_KEY)
-    // if (!req.cookies?.uuid) { // 不存在uuid则新增
-    //   const uuid: string = uuidv4() // uuid
-    //   res.cookie('uuid', uuid)
-    //   const ip = req.connection.remoteAddress
-    //   await insertUUid(uuid, ip)
-    // }
+    if (!req.cookies?.uuid) { // 不存在uuid则新增
+      const uuid: string = uuidv4() // uuid
+      res.cookie('uuid', uuid)
+      const ip = req.connection.remoteAddress
+      await insertUUid(uuid, ip)
+    }
     res.send({ status: 'Success', message: '', data: { auth: hasAuth, model: currentModel() } })
   }
   catch (error) {
