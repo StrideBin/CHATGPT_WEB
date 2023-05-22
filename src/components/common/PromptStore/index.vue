@@ -425,14 +425,14 @@ const dataSource = computed(() => {
               </p>
               <template #footer>
                 <div class="flex items-center justify-end space-x-4">
-                  <NButton text>
-                    <a
-                      :href="info.url"
-                      target="_blank"
-                    >
-                      <SvgIcon class="text-xl" icon="ri:link" />
-                    </a>
-                  </NButton>
+                  <!--                  <NButton text> -->
+                  <!--                    <a -->
+                  <!--                      :href="info.url" -->
+                  <!--                      target="_blank" -->
+                  <!--                    > -->
+                  <!--                      <SvgIcon class="text-xl" icon="ri:link" /> -->
+                  <!--                    </a> -->
+                  <!--                  </NButton> -->
                   <NButton text @click="setDownloadURL(info.downloadUrl) ">
                     <SvgIcon class="text-xl" icon="ri:add-fill" />
                   </NButton>

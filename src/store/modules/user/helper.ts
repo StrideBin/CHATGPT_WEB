@@ -17,7 +17,7 @@ export function defaultSetting(): UserState {
   return {
     userInfo: {
       avatar: '',
-      name: 'Bin',
+      name: 'AIGC',
       uuid: '',
       description: '',
     },

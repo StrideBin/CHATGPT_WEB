@@ -2,10 +2,10 @@ import type { Connection } from 'mysql'
 import { createConnection } from 'mysql'
 
 const db: Connection = createConnection({
-  host: '',
-  user: '',
-  password: '',
-  database: '',
+  host: '127.0.0.1',
+  user: 'root',
+  password: 'Mysql2022!',
+  database: 'c-web',
   // port: 12345 如果是3306就不需要配置
 })
 

@@ -75,6 +75,7 @@ export default {
   },
   store: {
     siderButton: '提示词商店',
+    aiTalk: 'OpenAI交流群',
     local: '本地',
     online: '在线',
     title: '标题',

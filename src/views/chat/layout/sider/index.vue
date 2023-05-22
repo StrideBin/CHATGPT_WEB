@@ -6,13 +6,14 @@ import List from './List.vue'
 import Footer from './Footer.vue'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { PromptStore } from '@/components/common'
+import { AiTalk, PromptStore } from '@/components/common'
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
 
 const { isMobile } = useBasicLayout()
 const show = ref(false)
+const show1 = ref(false)
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
@@ -83,6 +84,10 @@ watch(
           <NButton block @click="show = true">
             {{ $t('store.siderButton') }}
           </NButton>
+          <div style="height: 10px;" /> <!-- 添加一个10像素宽度的空元素 -->
+          <NButton block @click="show1 = true">
+            {{ $t('store.aiTalk') }}
+          </NButton>
         </div>
       </main>
       <Footer />
@@ -92,4 +97,6 @@ watch(
     <div v-show="!collapsed" class="fixed inset-0 z-40 w-full h-full bg-black/40" @click="handleUpdateCollapsed" />
   </template>
   <PromptStore v-model:visible="show" />
+
+  <AiTalk v-model:visible="show1" />
 </template>

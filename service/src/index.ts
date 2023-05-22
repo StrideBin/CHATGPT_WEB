@@ -7,7 +7,7 @@ import { auth } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
 import type { RequestProps } from './types'
-import { insertUUid } from './db/dbsql'
+import { insertUser } from './db/dbsql'
 const app = express()// 创建 Express 应用程序实例。
 const router = express.Router()// 创建路由器实例。
 app.use(express.static('public'))// 使用静态文件托管中间件来服务 public 目录下的静态资源。
@@ -108,9 +108,28 @@ router.post('/session', async (req, res) => {
     const hasAuth = isNotEmptyString(AUTH_SECRET_KEY)
     if (!req.cookies?.uuid) { // 不存在uuid则新增
       const uuid: string = uuidv4() // uuid
-      res.cookie('uuid', uuid)
       const ip = req.connection.remoteAddress
-      await insertUUid(uuid, ip)
+      await insertUser(uuid, '', '', ip)
+      res.cookie('uuid', uuid)
+    }
+    res.send({ status: 'Success', message: '', data: { auth: hasAuth, model: currentModel() } })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+    console.error({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+// 定义 '/session' 路由，处理异步请求，并返回一个包含当前机器人模型和认证信息的 JSON 响应。
+router.post('/login', async (req, res) => {
+  try {
+    const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
+    const hasAuth = isNotEmptyString(AUTH_SECRET_KEY)
+    if (!req.cookies?.uuid) { // 不存在uuid则新增
+      const uuid: string = uuidv4() // uuid
+      const ip = req.connection.remoteAddress
+      await insertUser(uuid, '', '', ip)
+      res.cookie('uuid', uuid)
     }
     res.send({ status: 'Success', message: '', data: { auth: hasAuth, model: currentModel() } })
   }
@@ -118,7 +137,6 @@ router.post('/session', async (req, res) => {
     res.send({ status: 'Fail', message: error.message, data: null })
   }
 })
-
 // 定义 '/verify' 路由，处理异步请求，并返回一个 JSON 响应，指示传递的令牌是否有效。
 router.post('/verify', async (req, res) => {
   try {
