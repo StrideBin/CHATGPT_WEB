@@ -5,5 +5,6 @@ import UserAvatar from './UserAvatar/index.vue'
 import Setting from './Setting/index.vue'
 import PromptStore from './PromptStore/index.vue'
 import AiTalk from './AiTalk/index.vue'
+import Login from './Login/index.vue'
 
-export { HoverButton, NaiveProvider, SvgIcon, UserAvatar, Setting, PromptStore, AiTalk }
+export { HoverButton, NaiveProvider, SvgIcon, UserAvatar, Setting, PromptStore, AiTalk, Login }

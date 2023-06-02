@@ -2,17 +2,72 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import type { ChatMessage } from 'chatgpt'
 import { v4 as uuidv4 } from 'uuid'
+import Dysmsapi20170525 from '@alicloud/dysmsapi20170525'
+import * as $OpenApi from '@alicloud/openapi-client'
+import * as $Dysmsapi20170525 from '@alicloud/dysmsapi20170525'
+import * as $Util from '@alicloud/tea-util'
+import Util from '@alicloud/tea-util'
 import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
 import { auth } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
 import type { RequestProps } from './types'
-import { insertUser } from './db/dbsql'
+import { addStore, checkMessage, getStore, getUser, insertMessage, insertUser, updateStore } from './db/dbsql'
 const app = express()// 创建 Express 应用程序实例。
 const router = express.Router()// 创建路由器实例。
 app.use(express.static('public'))// 使用静态文件托管中间件来服务 public 目录下的静态资源。
 app.use(express.json())// 使用 bodyParser 中间件来解析请求体。
 app.use(cookieParser())
+
+// This file is auto-generated, don't edit it
+// 依赖的模块可通过下载工程中的模块依赖文件或右上角的获取 SDK 依赖信息查看
+
+export default class Client {
+  //
+  //   使用AK&SK初始化账号Client
+  //   @param accessKeyId
+  //   @param accessKeySecret
+  //   @return Client
+  //   @throws Exception
+  //
+  static createClient(accessKeyId: string, accessKeySecret: string): Dysmsapi20170525 {
+    const config = new $OpenApi.Config({
+      // 必填，您的 AccessKey ID
+      accessKeyId,
+      // 必填，您的 AccessKey Secret
+      accessKeySecret,
+    })
+    // 访问的域名
+    config.endpoint = 'dysmsapi.aliyuncs.com'
+    return new Dysmsapi20170525(config)
+  }
+
+  static async sendMessage(phoneNumber: string): Promise<void> {
+    // 工程代码泄露可能会导致AccessKey泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考，建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378664.html
+    const client = Client.createClient('LTAI4O3wl93nZOvP', 'ccWV2NCCyabJQUWgrp1u95wxFm2spu')
+    const randomNum = Math.floor(100000 + Math.random() * 900000)
+
+    const sendSmsRequest = new $Dysmsapi20170525.SendSmsRequest({
+      signName: '人工智能ChatPlus',
+      templateCode: 'SMS_461005317',
+      phoneNumbers: phoneNumber,
+      templateParam: `{"code":"${randomNum}"}`,
+    })
+    const runtime = new $Util.RuntimeOptions({ })
+    try {
+      // 复制代码运行请自行打印 API 的返回值
+      const rs = await client.sendSmsWithOptions(sendSmsRequest, runtime)
+      if (rs.body.code !== 'OK')
+        console.error(rs.body.message)
+      else
+        await insertMessage(phoneNumber, randomNum)
+    }
+    catch (error) {
+      // 如有需要，请打印 error
+      Util.assertAsString(error.message)
+    }
+  }
+}
 
 // 使用 app.all() 设置跨域访问的响应头信息。
 app.all('*', (_, res, next) => {
@@ -33,6 +88,12 @@ function createChatMessagePromise(msg): Promise<any> {
 
 // 定义 '/chat-process' 路由，使用 [auth, limiter] 中间件对请求进行身份验证和限流，并使用 async/await 来处理异步请求，并返回 Promise 的二进制数据类型。
 router.post('/chat-process', [auth, limiter], async (req, res) => {
+  // const uuid = req.cookies.uuid
+  // if (uuid == null) {
+  //   res.setHeader('Content-type', 'application/octet-stream')
+  //   res.write(JSON.stringify('请登录'))
+  //   res.end()
+  // }
   // 获取 cookies 中名为 uuid 的值
   // const uuid = req.cookies.uuid
   // queryUUid(uuid)
@@ -106,37 +167,13 @@ router.post('/session', async (req, res) => {
   try {
     const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
     const hasAuth = isNotEmptyString(AUTH_SECRET_KEY)
-    if (!req.cookies?.uuid) { // 不存在uuid则新增
-      const uuid: string = uuidv4() // uuid
-      const ip = req.connection.remoteAddress
-      await insertUser(uuid, '', '', ip)
-      res.cookie('uuid', uuid)
-    }
     res.send({ status: 'Success', message: '', data: { auth: hasAuth, model: currentModel() } })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
-    console.error({ status: 'Fail', message: error.message, data: null })
   }
 })
 
-// 定义 '/session' 路由，处理异步请求，并返回一个包含当前机器人模型和认证信息的 JSON 响应。
-router.post('/login', async (req, res) => {
-  try {
-    const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
-    const hasAuth = isNotEmptyString(AUTH_SECRET_KEY)
-    if (!req.cookies?.uuid) { // 不存在uuid则新增
-      const uuid: string = uuidv4() // uuid
-      const ip = req.connection.remoteAddress
-      await insertUser(uuid, '', '', ip)
-      res.cookie('uuid', uuid)
-    }
-    res.send({ status: 'Success', message: '', data: { auth: hasAuth, model: currentModel() } })
-  }
-  catch (error) {
-    res.send({ status: 'Fail', message: error.message, data: null })
-  }
-})
 // 定义 '/verify' 路由，处理异步请求，并返回一个 JSON 响应，指示传递的令牌是否有效。
 router.post('/verify', async (req, res) => {
   try {
@@ -153,6 +190,92 @@ router.post('/verify', async (req, res) => {
     res.send({ status: 'Fail', message: error.message, data: null })
   }
 })
+// 定义 '/login' 路由，处理异步请求，并返回一个包含当前机器人模型和认证信息的 JSON 响应。
+router.post('/login', async (req, res) => {
+  try {
+    const phone_number = req.body.phoneNumber
+    const code = req.body.code
+    const msg = await checkMessage(phone_number, code)
+    const values = Object.values(msg)
+    if (values[0].cn > 0) {
+      const usr = await getUser('', phone_number)
+      const uuid: string = uuidv4() // uuid
+      const ip = req.connection.remoteAddress
+      if (usr.length !== 0) {
+        // 更新uuid为数据库的uuid
+        res.cookie('uuid', usr[0].user_id)
+        res.send({ status: 'Success', message: '登录成功', data: { code: 200 } })
+      }
+      else {
+        await insertUser(uuid, '', phone_number, ip)
+        // 更新uuid为数据库的uuid
+        res.cookie('uuid', uuid)
+        res.send({ status: 'Success', message: '用户不存在，自动注册新用户。', data: { code: 200 } })
+      }
+    }
+    else {
+      res.send({ status: 'Success', message: '验证码不正确', data: { code: 400 } })
+    }
+  }
+
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: { code: 400 } })
+  }
+})
+// 定义 '/addstore' 路由，处理异步请求，并返回一个包含当前机器人模型和认证信息的 JSON 响应。
+router.post('/addStore', async (req, res) => {
+  const user_id = req.body.user_id
+  const text = req.body.text
+  const users = getStore(user_id)
+  if (users == null)
+    await addStore(user_id, text)
+  else
+    updateStore(user_id, text)
+
+  res.send({ status: 'Success', message: '', data: { msg: '' } })
+})
+router.post('/sendMessage', async (req, res) => {
+  const phoneNumber = req.body.phoneNumber
+
+  await Client.sendMessage(phoneNumber)
+
+  res.send({ status: 'Success', message: '', data: { msg: '' } })
+})
+router.post('/checkMessage', async (req, res) => {
+  const phoneNumber = req.body.phoneNumber
+  const code = req.body.code
+
+  const rs = await checkMessage(phoneNumber, code)
+
+  if (rs > 0)
+    res.send({ status: 'Success', message: '', data: { code: 200 } })
+  else
+    res.send({ status: 'false', message: '', data: { code: 400 } })
+})
+
+// 更新 store
+router.post('/updateStore', async (req, res) => {
+  const user_id = req.body.user_id
+
+  const json = fetchAndParseStore(user_id)
+
+  localStorage.setItem('chatStorage', JSON.stringify(json))
+
+  res.send({ status: 'Success', message: '', data: { msg: '' } })
+})
+
+// 更新Store
+async function fetchAndParseStore(user_id: string) {
+  try {
+    const user = await getStore(user_id)
+    const json = JSON.parse(user[0].text)
+    console.log(json)
+  }
+  catch (err) {
+    console.error(err)
+  }
+}
+
 // 使用 app.use() 和 router 实例将路由器挂载到路径 '' 上和路径 '/api' 上。
 app.use('', router)
 app.use('/api', router)

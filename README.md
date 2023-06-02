@@ -137,11 +137,14 @@ pnpm bootstrap
 
 npm install --save-dev @types/uuid /安装uuid
 
-pnpm install mysql
+pnpm install mysql2
 
 npm install cookie-parser --save
 
 pnpm install --save-dev @types/qrcode
+
+npm install @alicloud/dysmsapi20170525 -S
+npm install @alicloud/openapi-client -S
 
 ```
 

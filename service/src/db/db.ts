@@ -1,5 +1,5 @@
-import type { Connection } from 'mysql'
-import { createConnection } from 'mysql'
+import type { Connection } from 'mysql2'
+import { createConnection } from 'mysql2'
 
 const db: Connection = createConnection({
   host: '127.0.0.1',
@@ -12,7 +12,7 @@ const db: Connection = createConnection({
 // 连接数据库
 db.connect((err) => {
   if (err) {
-    console.error('error connecting to MySQL database')
+    console.error(`${err}error connecting to MySQL database`)
     return
   }
   // eslint-disable-next-line no-console

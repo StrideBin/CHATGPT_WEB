@@ -64,3 +64,30 @@ export function fetchVerify<T>(token: string) {
     data: { token },
   })
 }
+
+export function addStore<T>(user_id: string, text: string) {
+  return post<T>({
+    url: '/addStore',
+    data: { user_id, text },
+  })
+}
+
+export function sendMessage<T>(phoneNumber: string) {
+  return post<T>({
+    url: '/sendMessage',
+    data: { phoneNumber },
+  })
+}
+export function login<T = any>(phoneNumber: string, code: number) {
+  return post<T>({
+    url: '/login',
+    data: { phoneNumber, code },
+  })
+}
+
+// export function checkMessage<T = any>(phoneNumber: string, code: number) {
+//   return post<T>({
+//     url: '/checkMessage',
+//     data: { phoneNumber, code },
+//   })
+// }
