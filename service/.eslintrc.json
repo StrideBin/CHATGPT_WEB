@@ -2,7 +2,7 @@
   "root": true,
   "ignorePatterns": ["build"],
   "extends": ["@antfu"],
-	"rules": {
-		"no-console": "warn"
-	}
+  "rules": {
+    "no-console": "warn"
+  }
 }

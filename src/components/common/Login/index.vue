@@ -35,14 +35,17 @@ const isValidPhoneNumber = (phoneNumber: string) => {
 
 const handleButtonClick = () => {
   if (!isValidPhoneNumber(phoneNumber.value)) {
-    allMessage.value = '请输入正确的手机号'
+    allMessage.value = '请输入正确的手机号!'
     setTimeout(() => {
       allMessage.value = ''
     }, 2000)
   }
   else {
     // 执行获取验证码的操作
-    allMessage.value = ''
+    allMessage.value = '获取验证码成功!'
+    setTimeout(() => {
+      allMessage.value = ''
+    }, 2000)
     sendMessage(phoneNumber.value)
   }
 }
@@ -54,7 +57,7 @@ const toLogin = async () => {
     const data = response.data
     const message = response.message
     if (data.code === 200) {
-      allMessage.value = '登录成功'
+      allMessage.value = '登录成功!'
       setTimeout(() => {
         allMessage.value = ''
       }, 2000)
