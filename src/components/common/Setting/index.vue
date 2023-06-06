@@ -4,6 +4,7 @@ import { NModal, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
 import Advanced from './Advanced.vue'
 import About from './About.vue'
+import Announce from './Announce.vue'
 import { useAuthStore } from '@/store'
 import { SvgIcon } from '@/components/common'
 
@@ -57,13 +58,20 @@ const show = computed({
             <Advanced />
           </div>
         </NTabPane>
-        <NTabPane name="Config" tab="Config">
+        <NTabPane  name="Config" tab="Config">
           <template #tab>
-            <SvgIcon class="text-lg" icon="ri:list-settings-line" />
+            <SvgIcon class="text-lg" icon="icon-park-outline:love-and-help" />
             <span class="ml-2">{{ $t('setting.config') }}</span>
           </template>
           <About />
         </NTabPane>
+				<NTabPane  name="Announce" tab="Announce">
+					<template #tab>
+						<SvgIcon class="text-lg" icon="zondicons:shield" />
+						<span class="ml-2">{{ $t('setting.announce') }}</span>
+					</template>
+					<Announce />
+				</NTabPane>
       </NTabs>
     </div>
   </NModal>

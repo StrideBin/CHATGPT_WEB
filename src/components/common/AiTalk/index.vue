@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { computed } from 'vue'
 import { NButton, NModal } from 'naive-ui'
-import imageSrc from '@/assets/qy_wx.jpeg'
+import imageSrc from '@/assets/img.png'
 
 interface Props {
   visible: boolean
@@ -25,7 +25,7 @@ const show = computed({
   <NModal v-model:show="show" style="width: 90%; max-width: 900px;" preset="card">
     <div class="text-center mt-4">
       <h2 class="text-lg font-bold mb-2">
-        OpenAI交流群
+        OpenAI交流群,联系我加群↓↓↓
       </h2>
     </div>
 

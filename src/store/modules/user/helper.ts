@@ -16,10 +16,10 @@ export interface UserState {
 export function defaultSetting(): UserState {
   return {
     userInfo: {
-      avatar: '',
-      name: 'AIGC',
+      avatar: 'https://pic-20230606.oss-cn-shanghai.aliyuncs.com/tiger.jpg',
+      name: 'Robin',
       uuid: '',
-      description: '',
+      description: 'If you want peace, prepare for war.',
     },
   }
 }

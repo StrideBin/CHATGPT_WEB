@@ -18,7 +18,11 @@ const show = ref(false)
         <SvgIcon icon="ri:settings-4-line" />
       </span>
     </HoverButton>
-
+		<HoverButton @click="show = true;">
+		<span class="text-xl text-[#4f555e] dark:text-white">
+        <SvgIcon icon="icon-park-outline:love-and-help" style="color: green" />
+      </span>
+		</HoverButton>
     <Setting v-if="show" v-model:visible="show" />
   </footer>
 </template>
