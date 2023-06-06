@@ -118,7 +118,7 @@ const toLogin = async () => {
       </NButton>
     </div>
     <div v-else class="mt-4">
-      <img src="/path/to/your/wechat/qrcode.jpg" alt="微信登录">
+      <!--      <img src="/path/to/your/wechat/qrcode.jpg" alt="微信登录"> -->
     </div>
   </NModal>
 </template>

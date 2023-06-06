@@ -1,73 +1,72 @@
 import express from 'express'
-import cookieParser from 'cookie-parser'
+// import cookieParser from 'cookie-parser'
 import type { ChatMessage } from 'chatgpt'
-import { v4 as uuidv4 } from 'uuid'
-import Dysmsapi20170525 from '@alicloud/dysmsapi20170525'
-import * as $OpenApi from '@alicloud/openapi-client'
-import * as $Dysmsapi20170525 from '@alicloud/dysmsapi20170525'
-import * as $Util from '@alicloud/tea-util'
-import Util from '@alicloud/tea-util'
+// import { v4 as uuidv4 } from 'uuid'
+// import Dysmsapi20170525 from '@alicloud/dysmsapi20170525'
+// import * as $OpenApi from '@alicloud/openapi-client'
+// import * as $Dysmsapi20170525 from '@alicloud/dysmsapi20170525'
+// import * as $Util from '@alicloud/tea-util'
+// import Util from '@alicloud/tea-util'
 import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
 import { auth } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
 import type { RequestProps } from './types'
-import { addStore, checkMessage, getStore, getUser, insertMessage, insertUser, updateStore } from './db/dbsql'
+import { addStore, checkMessage, getStore, getUser, insertUser, updateStore } from './db/dbsql'
 const app = express()// 创建 Express 应用程序实例。
 const router = express.Router()// 创建路由器实例。
 app.use(express.static('public'))// 使用静态文件托管中间件来服务 public 目录下的静态资源。
 app.use(express.json())// 使用 bodyParser 中间件来解析请求体。
-app.use(cookieParser())
+// app.use(cookieParser())
 
 // This file is auto-generated, don't edit it
 // 依赖的模块可通过下载工程中的模块依赖文件或右上角的获取 SDK 依赖信息查看
 
-export default class Client {
-  //
-  //   使用AK&SK初始化账号Client
-  //   @param accessKeyId
-  //   @param accessKeySecret
-  //   @return Client
-  //   @throws Exception
-  //
-  static createClient(accessKeyId: string, accessKeySecret: string): Dysmsapi20170525 {
-    const config = new $OpenApi.Config({
-      // 必填，您的 AccessKey ID
-      accessKeyId,
-      // 必填，您的 AccessKey Secret
-      accessKeySecret,
-    })
-    // 访问的域名
-    config.endpoint = 'dysmsapi.aliyuncs.com'
-    return new Dysmsapi20170525(config)
-  }
-
-  static async sendMessage(phoneNumber: string): Promise<void> {
-    // 工程代码泄露可能会导致AccessKey泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考，建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378664.html
-    const client = Client.createClient('LTAI4O3wl93nZOvP', 'ccWV2NCCyabJQUWgrp1u95wxFm2spu')
-    const randomNum = Math.floor(100000 + Math.random() * 900000)
-
-    const sendSmsRequest = new $Dysmsapi20170525.SendSmsRequest({
-      signName: '人工智能ChatPlus',
-      templateCode: 'SMS_461005317',
-      phoneNumbers: phoneNumber,
-      templateParam: `{"code":"${randomNum}"}`,
-    })
-    const runtime = new $Util.RuntimeOptions({ })
-    try {
-      // 复制代码运行请自行打印 API 的返回值
-      const rs = await client.sendSmsWithOptions(sendSmsRequest, runtime)
-      if (rs.body.code !== 'OK')
-        console.error(rs.body.message)
-      else
-        await insertMessage(phoneNumber, randomNum)
-    }
-    catch (error) {
-      // 如有需要，请打印 error
-      Util.assertAsString(error.message)
-    }
-  }
-}
+// export default class Client {
+//
+//   使用AK&SK初始化账号Client
+//   @param accessKeyId
+//   @param accessKeySecret
+//   @return Client
+//   @throws Exception
+//
+// static createClient(accessKeyId: string, accessKeySecret: string): Dysmsapi20170525 {
+//   const config = new $OpenApi.Config({
+//     // 必填，您的 AccessKey ID
+//     accessKeyId,
+//     // 必填，您的 AccessKey Secret
+//     accessKeySecret,
+//   })
+//   // 访问的域名
+//   config.endpoint = 'dysmsapi.aliyuncs.com'
+//   return new Dysmsapi20170525(config)
+// }
+//
+//   static async sendMessage(phoneNumber: string): Promise<void> {
+//     const client = Client.createClient('', '')
+//     const randomNum = Math.floor(100000 + Math.random() * 900000)
+//
+//     const sendSmsRequest = new $Dysmsapi20170525.SendSmsRequest({
+//       signName: '人工智能ChatPlus',
+//       templateCode: 'SMS_461005317',
+//       phoneNumbers: phoneNumber,
+//       templateParam: `{"code":"${randomNum}"}`,
+//     })
+//     const runtime = new $Util.RuntimeOptions({ })
+//     try {
+//       // 复制代码运行请自行打印 API 的返回值
+//       const rs = await client.sendSmsWithOptions(sendSmsRequest, runtime)
+//       if (rs.body.code !== 'OK')
+//         console.error(rs.body.message)
+//       else
+//         await insertMessage(phoneNumber, randomNum)
+//     }
+//     catch (error) {
+//       // 如有需要，请打印 error
+//       Util.assertAsString(error.message)
+//     }
+//   }
+// }
 
 // 使用 app.all() 设置跨域访问的响应头信息。
 app.all('*', (_, res, next) => {
@@ -199,7 +198,8 @@ router.post('/login', async (req, res) => {
     const values = Object.values(msg)
     if (values[0].cn > 0) {
       const usr = await getUser('', phone_number)
-      const uuid: string = uuidv4() // uuid
+      // const uuid: string = uuidv4() // uuid
+      const uuid = ''
       const ip = req.connection.remoteAddress
       if (usr.length !== 0) {
         // 更新uuid为数据库的uuid
@@ -237,7 +237,7 @@ router.post('/addStore', async (req, res) => {
 router.post('/sendMessage', async (req, res) => {
   const phoneNumber = req.body.phoneNumber
 
-  await Client.sendMessage(phoneNumber)
+  // await Client.sendMessage(phoneNumber)
 
   res.send({ status: 'Success', message: '', data: { msg: '' } })
 })
@@ -259,7 +259,7 @@ router.post('/updateStore', async (req, res) => {
 
   const json = fetchAndParseStore(user_id)
 
-  localStorage.setItem('chatStorage', JSON.stringify(json))
+  // localStorage.setItem('chatStorage', JSON.stringify(json))
 
   res.send({ status: 'Success', message: '', data: { msg: '' } })
 })

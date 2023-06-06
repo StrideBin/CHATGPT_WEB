@@ -89,10 +89,10 @@ watch(
           <NButton block @click="showAiTalk = true">
             {{ $t('store.aiTalk') }}
           </NButton>
-          <div style="height: 10px;" /> <!-- 添加一个10像素宽度的空元素 -->
-          <NButton block @click="showLogin = true">
-            {{ $t('store.showLogin') }}
-          </NButton>
+          <!--          <div style="height: 10px;" /> &lt;!&ndash; 添加一个10像素宽度的空元素 &ndash;&gt; -->
+          <!--          <NButton block @click="showLogin = true"> -->
+          <!--            {{ $t('store.showLogin') }} -->
+          <!--          </NButton> -->
         </div>
       </main>
       <Footer />

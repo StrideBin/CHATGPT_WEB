@@ -554,5 +554,4 @@ onUnmounted(() => {
       </div>
     </footer>
   </div>
-  <div />
 </template>
