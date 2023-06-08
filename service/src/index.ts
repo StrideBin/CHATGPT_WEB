@@ -1,7 +1,7 @@
 import express from 'express'
 // import cookieParser from 'cookie-parser'
 import type { ChatMessage } from 'chatgpt'
-// import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 // import Dysmsapi20170525 from '@alicloud/dysmsapi20170525'
 // import * as $OpenApi from '@alicloud/openapi-client'
 // import * as $Dysmsapi20170525 from '@alicloud/dysmsapi20170525'
@@ -166,6 +166,11 @@ router.post('/session', async (req, res) => {
   try {
     const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
     const hasAuth = isNotEmptyString(AUTH_SECRET_KEY)
+		const user_id=uuidv4();
+		const wechat_id='';
+		const phone_number='';
+		const ip = req.connection.remoteAddress
+		await insertUser(user_id, wechat_id, phone_number, ip);
     res.send({ status: 'Success', message: '', data: { auth: hasAuth, model: currentModel() } })
   }
   catch (error) {

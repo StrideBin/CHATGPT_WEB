@@ -15,8 +15,9 @@ export function getUser(wechat_id: string, phone_number: string): Promise<any> {
 }
 // 用户注册，通过手机号或者微信号
 export function insertUser(user_id: string, wechat_id: string, phone_number: string, ip: string) {
+	const currentTime = new Date()
   return new Promise((resolve, reject) => {
-    db.query('INSERT INTO users (user_id, wechat_id, phone_number, ip) VALUES (?,?,?,?)', [user_id, wechat_id, phone_number, ip], (error, results, fields) => {
+    db.query('INSERT INTO users (user_id, wechat_id, phone_number, ip,created_time) VALUES (?,?,?,?,?)', [user_id, wechat_id, phone_number, ip,currentTime], (error, results, fields) => {
       if (error)
         reject(error)
       else resolve(results)
