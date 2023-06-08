@@ -169,7 +169,7 @@ router.post('/session', async (req, res) => {
 		const user_id=uuidv4();
 		const wechat_id='';
 		const phone_number='';
-		const ip = req.connection.remoteAddress
+		const ip = req.headers['x-real-ip'] as string|| req.headers['x-forwarded-for']  as string|| req.connection.remoteAddress;
 		await insertUser(user_id, wechat_id, phone_number, ip);
     res.send({ status: 'Success', message: '', data: { auth: hasAuth, model: currentModel() } })
   }
