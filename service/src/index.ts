@@ -1,5 +1,5 @@
 import express from 'express'
-// import cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser'
 import type { ChatMessage } from 'chatgpt'
 import { v4 as uuidv4 } from 'uuid'
 // import Dysmsapi20170525 from '@alicloud/dysmsapi20170525'
@@ -17,7 +17,7 @@ const app = express()// 创建 Express 应用程序实例。
 const router = express.Router()// 创建路由器实例。
 app.use(express.static('public'))// 使用静态文件托管中间件来服务 public 目录下的静态资源。
 app.use(express.json())// 使用 bodyParser 中间件来解析请求体。
-// app.use(cookieParser())
+app.use(cookieParser())
 
 // This file is auto-generated, don't edit it
 // 依赖的模块可通过下载工程中的模块依赖文件或右上角的获取 SDK 依赖信息查看
@@ -87,12 +87,31 @@ function createChatMessagePromise(msg): Promise<any> {
 
 // 定义 '/chat-process' 路由，使用 [auth, limiter] 中间件对请求进行身份验证和限流，并使用 async/await 来处理异步请求，并返回 Promise 的二进制数据类型。
 router.post('/chat-process', [auth, limiter], async (req, res) => {
-  // const uuid = req.cookies.uuid
+  const uuid = req.cookies?.uuid
+	// console.log('cookies'+req.cookies)
+	const ip = req.headers['x-real-ip'] as string|| req.headers['x-forwarded-for']  as string|| req.connection.remoteAddress;
+	if(!uuid){
+		console.log(ip)
+			res.setHeader('Content-type', 'application/octet-stream')
+			res.write(JSON.stringify('非法访问'))
+			res.end()
+
+	}else{
+	//如果未登录
   // if (uuid == null) {
-  //   res.setHeader('Content-type', 'application/octet-stream')
-  //   res.write(JSON.stringify('请登录'))
-  //   res.end()
+	// 	const countMap = new Map<string, any>();
+	// 	let useCount:number=0;
+	// 	countMap.set(ip, useCount++);
+	//
+	// 	if(countMap.get(ip)>10){
+	// 		res.setHeader('Content-type', 'application/octet-stream')
+	// 		res.write(JSON.stringify('为避免恶意访问，未登录的情况下免费使用次数为10次，请登录后继续使用'))
+	// 		res.end()
+	// 	}
+	//
   // }
+
+
   // 获取 cookies 中名为 uuid 的值
   // const uuid = req.cookies.uuid
   // queryUUid(uuid)
@@ -129,6 +148,7 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
   //   })
 
   try {
+		console.log('33333')
     const { prompt, options = {}, systemMessage, temperature, top_p } = req.body as RequestProps
     let firstChunk = true
     await chatReplyProcess({
@@ -149,6 +169,7 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
   finally {
     res.end()
   }
+	}
 })
 
 // 定义 '/config' 路由，使用 auth 中间件验证身份，并使用 async/await 处理异步请求，并返回 Promise 的 JSON 数据类型。
@@ -167,6 +188,7 @@ router.post('/session', async (req, res) => {
     const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
     const hasAuth = isNotEmptyString(AUTH_SECRET_KEY)
 		const user_id=uuidv4();
+		res.cookie('uuid', user_id)
 		const wechat_id='';
 		const phone_number='';
 		const ip = req.headers['x-real-ip'] as string|| req.headers['x-forwarded-for']  as string|| req.connection.remoteAddress;
