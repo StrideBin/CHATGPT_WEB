@@ -148,7 +148,6 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
   //   })
 
   try {
-		console.log('33333')
     const { prompt, options = {}, systemMessage, temperature, top_p } = req.body as RequestProps
     let firstChunk = true
     await chatReplyProcess({
