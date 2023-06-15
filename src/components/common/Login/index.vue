@@ -4,6 +4,7 @@ import {NButton, NInput, NModal, NTabPane, NTabs} from 'naive-ui'
 import { login,sendMessage } from '@/api'
 import { useUserStore } from '@/store'
 import {SvgIcon} from "@/components/common";
+import wechatLogin from '@/assets/img.png'
 import { useMessage } from 'naive-ui'
 const props = defineProps<Props>()
 const emit = defineEmits<Emit>()
@@ -47,6 +48,7 @@ function startCountdown() {
 			if (remainingSeconds.value === 0) {
 				clearInterval(intervalId)
 				isCounting.value = false
+				verifyText.value='获取验证码'
 			}
 		}, 1000)
 	}
@@ -62,6 +64,7 @@ const handleButtonClick = () => {
 		message.success('获取验证码成功!')
   }
 }
+
 const toLogin = async () => {
   try {
     const response = await login(phoneNumber.value, code.value)
@@ -70,7 +73,12 @@ const toLogin = async () => {
     if (data.code === 200) {
 			message.success('登录成功!')
       show.value = false
-      userStore.userInfo.name = phoneNumber.value
+			userStore.userInfo.name = phoneNumber.value
+			userStore.userInfo.avatar = ''
+			userStore.userInfo.description = ''
+			userStore.userInfo.isLogin = true
+			userStore.updateUserInfo(userStore.userInfo);
+			location.reload()
     }
     else {
 			message.error(msg || '登录失败!')
@@ -81,13 +89,11 @@ const toLogin = async () => {
   }
 }
 
-
-
 </script>
 <template>
   <NModal v-model:show="show" style="width: 50%; max-width: 420px;height: 50%;min-height: 400px;max-height: 400px" preset="card">
 
-		<NTabs default-value="phone" size="large" justify-content="space-evenly" type="line" >
+		<NTabs default-value="phone" size="large" justify-content="space-evenly" type="line" style="max-width: 100%" >
 			<NTabPane name="phone" tab="手机登录" class="mt-4">
 				<NInput v-model:value="phoneNumber" class="mt-4" style="width: 100%;" size="large" placeholder="请输入手机号" >
 					<template #prefix>
@@ -102,19 +108,15 @@ const toLogin = async () => {
 				<NButton name="verifyCode" :disabled="isCounting"
 					class="mt-4" size="large" style="width: 30%;margin-left: 5%;text-align: center;" @click="handleButtonClick"
 				>
-
 					{{verifyText}}
 				</NButton>
 				<NButton  class="mt-4" style="width: 100%;margin-top: 10%" type="primary" size="large"  @click="toLogin">
 					登录
 				</NButton>
 			</NTabPane>
-			<NTabPane name="wechat" tab="微信登录" class="mt-4">
-				<img src="/path/to/your/wechat/qrcode.jpg" alt="微信登录">
+			<NTabPane name="wechat" tab="微信登录" class="mt-4" style="margin: 0 auto;max-width: 55%;max-height: 55%">
+				<img :src="wechatLogin" alt="微信登录">
 			</NTabPane>
 		</NTabs>
-
-
-
   </NModal>
 </template>

@@ -4,9 +4,10 @@ import { computed, ref, watch } from 'vue'
 import { NButton, NLayoutSider } from 'naive-ui'
 import List from './List.vue'
 import Footer from './Footer.vue'
-import { useAppStore, useChatStore } from '@/store'
+import {useAppStore, useChatStore, useUserStore} from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { AiTalk, Login, PromptStore } from '@/components/common'
+const userStore = useUserStore()
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
@@ -15,6 +16,8 @@ const { isMobile } = useBasicLayout()
 const show = ref(false)
 const showAiTalk = ref(false)
 const showLogin = ref(false)
+
+const isLogin = ref(userStore.userInfo.isLogin)
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
@@ -90,7 +93,7 @@ watch(
             {{ $t('store.aiTalk') }}
           </NButton>
                     <div style="height: 10px;" /> <!-- 添加一个10像素宽度的空元素 -->
-                    <NButton block @click="showLogin = true">
+                    <NButton v-if="!isLogin" block @click="showLogin = true">
                       {{ $t('store.showLogin') }}
                     </NButton>
         </div>

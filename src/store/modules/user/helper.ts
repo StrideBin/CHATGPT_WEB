@@ -7,6 +7,7 @@ export interface UserInfo {
   name: string
   uuid: string
   description: string
+	isLogin?: boolean
 }
 
 export interface UserState {
@@ -20,6 +21,7 @@ export function defaultSetting(): UserState {
       name: 'Robin',
       uuid: '',
       description: 'If you want peace, prepare for war.',
+			isLogin: false,
     },
   }
 }
