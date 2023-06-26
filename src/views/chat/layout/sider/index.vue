@@ -14,7 +14,7 @@ const chatStore = useChatStore()
 
 const { isMobile } = useBasicLayout()
 const show = ref(false)
-const showAiTalk = ref(false)
+const showAiTalk = ref(true)
 const showLogin = ref(false)
 
 const isLogin = ref(userStore.userInfo.isLogin)
