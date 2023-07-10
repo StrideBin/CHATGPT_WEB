@@ -60,6 +60,14 @@ watch(
     flush: 'post',
   },
 )
+ function redirectToAITools() {
+	 window.open('https://tools.yunjieguimeng.com', '_blank');
+}
+
+function redirectToCard() {
+	window.open('https://card.yunjieguimeng.com', '_blank');
+}
+
 </script>
 
 <template>
@@ -93,9 +101,17 @@ watch(
             {{ $t('store.aiTalk') }}
           </NButton>
                     <div style="height: 10px;" /> <!-- 添加一个10像素宽度的空元素 -->
-                    <NButton v-if="!isLogin" block @click="showLogin = true">
-                      {{ $t('store.showLogin') }}
-                    </NButton>
+<!--                    <NButton v-if="!isLogin" block @click="showLogin = true">-->
+<!--                      {{ $t('store.showLogin') }}-->
+<!--                    </NButton>-->
+
+					<NButton  block @click="redirectToAITools">
+						AI工具集
+					</NButton>
+					<div style="height: 10px;" /> <!-- 添加一个10像素宽度的空元素 -->
+					<NButton  block @click="redirectToCard">
+						GPT独享账号
+					</NButton>
         </div>
       </main>
       <Footer />
