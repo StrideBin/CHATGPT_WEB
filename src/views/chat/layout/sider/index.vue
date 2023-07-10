@@ -4,10 +4,10 @@ import { computed, ref, watch } from 'vue'
 import { NButton, NLayoutSider } from 'naive-ui'
 import List from './List.vue'
 import Footer from './Footer.vue'
-import {useAppStore, useChatStore, useUserStore} from '@/store'
+import {useAppStore, useChatStore} from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { AiTalk, Login, PromptStore } from '@/components/common'
-const userStore = useUserStore()
+// const userStore = useUserStore()
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
@@ -17,7 +17,7 @@ const show = ref(false)
 const showAiTalk = ref(true)
 const showLogin = ref(false)
 
-const isLogin = ref(userStore.userInfo.isLogin)
+// const isLogin = ref(userStore.userInfo.isLogin)
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
